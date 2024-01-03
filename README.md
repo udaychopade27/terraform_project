@@ -1,4 +1,4 @@
-# AWS EC2 Deployment with Terraform
+# AWS EC2 (Network Resources) Deployment with Terraform
 ### Overview
 This project utilizes Terraform to automate the deployment of EC2 instances on the AWS cloud. It streamlines the process of provisioning infrastructure as code, providing a scalable and flexible solution for managing AWS resources.
 

@@ -43,7 +43,30 @@ resource "aws_vpc" "my_vpc"{
        }
 }
 
+resource "aws_subnet" "my_subnet" {
+  vpc_id = aws_vpc.my_vpc.id
+  cidr_block = "10.0.0.0/24"
+  tags = {
+    Name = "subnet-1"
+  }
+}
 
+data "aws_availability_zones" "azs" {}
 
+variable "subnet_cidr" {
+  # type = "list"
+  default = ["10.0.1.0/24", "10.0.2.0/24","10.0.3.0/24"]
+}
 
+resource "aws_subnet" "my_vpc_subnets" {
+  count = length(var.subnet_cidr)
+  vpc_id = aws_vpc.my_vpc.id
+  cidr_block = "${element(var.subnet_cidr, count.index)}"
+
+  map_public_ip_on_launch = "true"
+  availability_zone = "${element(data.aws_availability_zones.azs.names, count.index)}"
+  tags = {
+    Name = "my_vpc_subnet-${count.index+1}"
+  }
+}
 

@@ -57,6 +57,9 @@ variable "subnet_cidr" {
   # type = "list"
   default = ["10.0.1.0/24", "10.0.2.0/24","10.0.3.0/24"]
 }
+variable "vpc_cidr" {
+   default = "10.0.0.0/16"
+}
 
 resource "aws_subnet" "my_vpc_subnets" {
   count = length(var.subnet_cidr)
@@ -100,4 +103,25 @@ resource "aws_route_table_association" "rt-association" {
   route_table_id = aws_route_table.my_vpc_route_table.id
 }
 
-
+resource "aws_security_group" "my_security_group" {
+  name = "my_security_group"
+  vpc_id = aws_vpc.my_vpc.id
+  ingress {
+    from_port = 22
+    to_port = 22 
+    protocol = "TCP"
+    cidr_blocks = ["${var.vpc_cidr}"]
+  }
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "TCP"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 0
+    to_port = 0  # port value 0 means all ports
+    protocol = "-1"  # protocol value "-1" is equivalent to all
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}

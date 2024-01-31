@@ -10,8 +10,6 @@ terraform {
 
 provider "aws" {
           region = "ap-south-1"
-          # Increase timeout for IMDS request (in seconds)
-          shared_credentials_timeout_seconds = 900
 }
 
 resource "aws_instance" "my_ec2_instance" {
